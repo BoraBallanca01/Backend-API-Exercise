@@ -1,4 +1,5 @@
-package controllers;
+package io.exercise.api.controllers;
+
 
 import play.mvc.*;
 
@@ -15,6 +16,9 @@ public class HomeController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
     public Result index() {
+
+
+
         return ok(views.html.index.render());
     }
 
