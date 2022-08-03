@@ -35,12 +35,13 @@ public class AuthenticationService {
                     try {
                         MongoCollection<User> collection = mongoDB
                                 .getMongoDatabase()
-                                .getCollection("authentication", User.class);
+                                .getCollection("user", User.class);
 
+                        String authPassword=Hash.createPassword(authUser.getPassword());
                         User user = collection
                                 .find(Filters.or(
-                                                Filters.eq("username", authUser.getUsername()),
-                                                Filters.eq("password", authUser.getPassword()))
+                                        Filters.eq("username", authUser.getUsername()),
+                                        Filters.eq("password", authPassword))
                                 ).first();
 
                         if (user == null) {
@@ -56,48 +57,6 @@ public class AuthenticationService {
                         return JWT.create()
                                 .withIssuer(user.getId().toString())
                                 .sign(algorithm);
-                    } catch (JWTCreationException ex) {
-                        ex.printStackTrace();
-                        throw new CompletionException(new RequestException(Http.Status.BAD_REQUEST, Json.toJson("Invalid Signing configuration / Couldn't convert Claims.")));
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        throw new CompletionException(new RequestException(Http.Status.UNAUTHORIZED, Json.toJson("You are not authorized! Catch Related")));
-                    }
-                }
-        );
-    }
-
-    public CompletableFuture<User> verify (String token) {
-        return CompletableFuture.supplyAsync(() -> {
-                    try {
-                        MongoCollection<User> collection = mongoDB
-                                .getMongoDatabase()
-                                .getCollection("authentication", User.class);
-
-                        byte[] decoded = Base64.getDecoder().decode(token.split("\\.")[1]);
-                        String decodedString = new String(decoded);
-                        JsonNode jsonNode = Json.parse(decodedString);
-                        String id = jsonNode.get("iss").asText();
-
-                        User user = collection
-                                .find(Filters.eq("_id", new ObjectId(id))).first();
-
-                        if (user == null) {
-                            throw new CompletionException(new RequestException(Http.Status.NOT_FOUND, Json.toJson("User not found!")));
-                        }
-
-//                        if (!Hash.checkPassword(authUser.getPassword(), user.getPassword())) {
-//                            throw new CompletionException(new RequestException(Http.Status.UNAUTHORIZED, Json.toJson("You are not authorized! Password Related")));
-//                        }
-
-                        String secret = config.getString("play.http.secret.key");
-                        Algorithm algorithm = Algorithm.HMAC256(secret);
-                        JWTVerifier verifier = JWT.require(algorithm)
-                                .withIssuer(user.getId().toString())
-                                .build();
-                        verifier.verify(token);
-
-                        return user;
                     } catch (JWTCreationException ex) {
                         ex.printStackTrace();
                         throw new CompletionException(new RequestException(Http.Status.BAD_REQUEST, Json.toJson("Invalid Signing configuration / Couldn't convert Claims.")));

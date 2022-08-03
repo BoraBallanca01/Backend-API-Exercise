@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.exercise.api.models.BaseModel;
 import io.exercise.api.mongo.serializers.ObjectIdDeSerializer;
 import io.exercise.api.mongo.serializers.ObjectIdStringSerializer;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonId;
@@ -18,7 +20,6 @@ import org.bson.types.ObjectId;
 import java.util.List;
 
 @Data
-@ToString
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = EmailType.class, name = "EMAIL"),
@@ -34,5 +35,6 @@ public class ContentType extends BaseModel {
     @JsonDeserialize(using = ObjectIdDeSerializer.class)
     Type type = Type.NONE;
     ObjectId dashboardId;
-
+    List<String> realACL;
+    List<String> writeACL;
 }

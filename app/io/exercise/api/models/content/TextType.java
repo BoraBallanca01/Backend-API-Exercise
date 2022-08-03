@@ -13,7 +13,5 @@ public class TextType extends ContentType {
         return Type.TEXT;
     }
     String text;
-    List<String> readACL;
-    List<String> writeACL;
 
 }

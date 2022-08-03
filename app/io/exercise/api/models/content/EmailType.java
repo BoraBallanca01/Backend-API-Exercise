@@ -15,6 +15,5 @@ public class EmailType extends ContentType {
     String text;
     String subject;
     String email;
-    List<String> realACL;
-    List<String> writeACL;
+
 }
