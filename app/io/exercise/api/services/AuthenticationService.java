@@ -37,11 +37,10 @@ public class AuthenticationService {
                                 .getMongoDatabase()
                                 .getCollection("user", User.class);
 
-                        String authPassword=Hash.createPassword(authUser.getPassword());
                         User user = collection
                                 .find(Filters.or(
                                         Filters.eq("username", authUser.getUsername()),
-                                        Filters.eq("password", authPassword))
+                                        Filters.eq("password", authUser.getPassword()))
                                 ).first();
 
                         if (user == null) {

@@ -15,8 +15,8 @@ GET           /api/dashboard/                              @io.exercise.api.cont
 PUT           /api/dashboard/:id                           @io.exercise.api.controllers.DashboardController.update(request: Request, id: String)
 DELETE        /api/dashboard/:id                           @io.exercise.api.controllers.DashboardController.delete(request: Request, id: String)
 
-GET           /api/dashboard/:id/                          @io.exercise.api.controllers.ContentController.read(request: Request,id:String)
-POST          /api/dashboard/:id/                          @io.exercise.api.controllers.ContentController.create(request: Request,id:String)
+GET           /api/dashboard/:id                           @io.exercise.api.controllers.ContentController.read(request: Request,id:String)
+POST          /api/dashboard/:id                           @io.exercise.api.controllers.ContentController.create(request: Request,id:String)
 PUT           /api/dashboard/:id/content/:contentId        @io.exercise.api.controllers.ContentController.update(request: Request, id:String, contentId: String)
 DELETE        /api/dashboard/:id/content/:contentId        @io.exercise.api.controllers.ContentController.delete(request: Request, id:String, contentId: String)
 
@@ -29,5 +29,5 @@ DELETE        /api/user/:id                                @io.exercise.api.cont
 
 POST          /api/roles/                                  @io.exercise.api.controllers.RolesController.create(request: Request)
 GET           /api/roles/                                  @io.exercise.api.controllers.RolesController.read(request: Request)
-PUT           /api/roles/:id/                              @io.exercise.api.controllers.RolesController.update(request: Request, id: String)
+PUT           /api/roles/:id                               @io.exercise.api.controllers.RolesController.update(request: Request, id: String)
 DELETE        /api/roles/:id                               @io.exercise.api.controllers.RolesController.delete(request: Request, id: String)

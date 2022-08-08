@@ -46,6 +46,7 @@ public class AuthenticationAction extends Action<Authentication> {
                     .getCollection("user", User.class);
 
             User user = collection.find(Filters.eq("_id", new ObjectId(id))).first();
+
             if (user == null) {
                 throw new CompletionException(new RequestException(Http.Status.NOT_FOUND, Json.toJson("User not found!")));
             }

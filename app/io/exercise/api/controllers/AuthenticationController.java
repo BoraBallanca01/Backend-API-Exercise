@@ -20,7 +20,7 @@ public class AuthenticationController {
     @Inject
     AuthenticationService service;
 
-    @Authentication
+
     public CompletableFuture<Result> authenticate(Http.Request request) {
         return serializationService.parseBodyOfType(request, AuthenticatedUser.class)
                 .thenCompose(data -> service.authenticate(data))

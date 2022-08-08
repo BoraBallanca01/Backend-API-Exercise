@@ -1,6 +1,7 @@
 package io.exercise.api.controllers;
 
 import com.google.inject.Inject;
+import io.exercise.api.actions.Authentication;
 import io.exercise.api.actions.Validation;
 import io.exercise.api.models.content.ContentType;
 import io.exercise.api.services.ContentService;
@@ -12,7 +13,7 @@ import play.mvc.Result;
 import play.mvc.Results;
 
 import java.util.concurrent.CompletableFuture;
-
+@Authentication
 public class ContentController {
     @Inject
     SerializationService serializationService;
