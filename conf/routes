@@ -31,3 +31,5 @@ POST          /api/roles/                                  @io.exercise.api.cont
 GET           /api/roles/                                  @io.exercise.api.controllers.RolesController.read(request: Request)
 PUT           /api/roles/:id                               @io.exercise.api.controllers.RolesController.update(request: Request, id: String)
 DELETE        /api/roles/:id                               @io.exercise.api.controllers.RolesController.delete(request: Request, id: String)
+
+GET           /api/chat/:roomId                             @io.exercise.api.controllers.ChatController.chat(roomId: String)

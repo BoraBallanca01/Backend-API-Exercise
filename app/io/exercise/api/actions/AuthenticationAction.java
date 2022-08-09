@@ -13,6 +13,7 @@ import com.typesafe.config.Config;
 import io.exercise.api.exceptions.RequestException;
 import io.exercise.api.models.User;
 import io.exercise.api.mongo.IMongoDB;
+import io.exercise.api.services.SerializationService;
 import io.exercise.api.utils.ServiceUtils;
 import org.bson.types.ObjectId;
 import play.libs.Json;
@@ -27,6 +28,9 @@ import java.util.concurrent.CompletionStage;
 public class AuthenticationAction extends Action<Authentication> {
 
     @Inject
+    SerializationService serializationService;
+
+    @Inject
     IMongoDB mongoDB;
 
     @Inject
@@ -36,27 +40,11 @@ public class AuthenticationAction extends Action<Authentication> {
     public CompletionStage<Result> call(Http.Request request) {
         try {
             String token = ServiceUtils.getTokenFromRequest(request);
-            byte[] decoded = Base64.getDecoder().decode(token.split("\\.")[1]);
-            String decodedString = new String(decoded);
-            JsonNode jsonNode = play.libs.Json.parse(decodedString);
-            String id = jsonNode.get("iss").asText();
-
-            MongoCollection<User> collection = mongoDB
-                    .getMongoDatabase()
-                    .getCollection("user", User.class);
-
-            User user = collection.find(Filters.eq("_id", new ObjectId(id))).first();
-
-            if (user == null) {
-                throw new CompletionException(new RequestException(Http.Status.NOT_FOUND, Json.toJson("User not found!")));
-            }
-
-            String secret = config.getString("play.http.secret.key");
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-            JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer(user.getId().toString())
-                    .build();
-            verifier.verify(token);
+            User user = ServiceUtils
+                    .decodeToken(token)
+                    .thenCompose(ServiceUtils::getUserFromId)
+                    .thenCompose(x -> ServiceUtils.verify(x,token))
+                    .join();
 
             request = request.addAttr(Attributes.USER_TYPED_KEY, user);
             return delegate.call(request);
