@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
+import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.bson.types.ObjectId;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -22,9 +24,13 @@ public class Dashboard extends BaseModel {
     @NotNull
     String description;
 
-    String parentId;
-    List<String> readACL;
-    List<String> writeACL;
+    ObjectId parentId;
+    List<String> readACL = new ArrayList<>();
+    List<String> writeACL = new ArrayList<>();
+
+    int level;
+    @BsonProperty("children")
+    List<Dashboard> children = new ArrayList<>();
 
     List<ContentType> content=new ArrayList<>();
 

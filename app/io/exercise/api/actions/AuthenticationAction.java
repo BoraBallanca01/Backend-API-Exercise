@@ -28,9 +28,6 @@ import java.util.concurrent.CompletionStage;
 public class AuthenticationAction extends Action<Authentication> {
 
     @Inject
-    SerializationService serializationService;
-
-    @Inject
     IMongoDB mongoDB;
 
     @Inject
@@ -42,8 +39,8 @@ public class AuthenticationAction extends Action<Authentication> {
             String token = ServiceUtils.getTokenFromRequest(request);
             User user = ServiceUtils
                     .decodeToken(token)
-                    .thenCompose(ServiceUtils::getUserFromId)
-                    .thenCompose(x -> ServiceUtils.verify(x,token))
+                    .thenCompose(x -> ServiceUtils.getUserFromId(mongoDB, x))
+                    .thenCompose(x -> ServiceUtils.verify(x, token, config))
                     .join();
 
             request = request.addAttr(Attributes.USER_TYPED_KEY, user);

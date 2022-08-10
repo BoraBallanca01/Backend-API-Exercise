@@ -55,5 +55,11 @@ public class DashboardController extends Controller {
                 .exceptionally(DatabaseUtils::throwableToResult);
     }
 
+    public CompletableFuture<Result> hierarchy(){
+        return service.hierarchy()
+                .thenCompose(data->serializationService.toJsonNode(data))
+                .thenApply(Results::ok)
+                .exceptionally(DatabaseUtils::throwableToResult);
+    }
 
 }

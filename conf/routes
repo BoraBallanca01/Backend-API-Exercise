@@ -14,6 +14,7 @@ POST          /api/dashboard/                              @io.exercise.api.cont
 GET           /api/dashboard/                              @io.exercise.api.controllers.DashboardController.read(request: Request)
 PUT           /api/dashboard/:id                           @io.exercise.api.controllers.DashboardController.update(request: Request, id: String)
 DELETE        /api/dashboard/:id                           @io.exercise.api.controllers.DashboardController.delete(request: Request, id: String)
+GET           /api/dashboard/hierarchy                     @io.exercise.api.controllers.DashboardController.hierarchy()
 
 GET           /api/dashboard/:id                           @io.exercise.api.controllers.ContentController.read(request: Request,id:String)
 POST          /api/dashboard/:id                           @io.exercise.api.controllers.ContentController.create(request: Request,id:String)
@@ -32,4 +33,4 @@ GET           /api/roles/                                  @io.exercise.api.cont
 PUT           /api/roles/:id                               @io.exercise.api.controllers.RolesController.update(request: Request, id: String)
 DELETE        /api/roles/:id                               @io.exercise.api.controllers.RolesController.delete(request: Request, id: String)
 
-GET           /api/chat/:roomId                             @io.exercise.api.controllers.ChatController.chat(roomId: String)
+GET           /api/chat/:roomId                             @io.exercise.api.controllers.ChatController.chat(roomId: String,token: String)

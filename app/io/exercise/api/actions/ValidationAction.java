@@ -18,7 +18,6 @@ import java.util.concurrent.CompletionStage;
 
 public class ValidationAction extends Action<Validation> {
     @Override
-//    @BodyParser.Of(BodyParser.Json.class)
     public CompletionStage<Result> call(Http.Request request) {
         try {
             JsonNode body = request.body().asJson();

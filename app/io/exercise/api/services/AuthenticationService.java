@@ -38,10 +38,9 @@ public class AuthenticationService {
                                 .getCollection("user", User.class);
 
                         User user = collection
-                                .find(Filters.or(
-                                        Filters.eq("username", authUser.getUsername()),
-                                        Filters.eq("password", authUser.getPassword()))
-                                ).first();
+                                .find(Filters
+                                        .eq("username", authUser.getUsername()))
+                                .first();
 
                         if (user == null) {
                             throw new CompletionException(new RequestException(Http.Status.NOT_FOUND, Json.toJson("User not found!")));

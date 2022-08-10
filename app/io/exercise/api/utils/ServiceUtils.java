@@ -24,13 +24,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
 public class ServiceUtils {
-    @Inject
-    static
-    IMongoDB mongoDB;
-
-    @Inject
-    static
-    Config config;
 
     public static String getTokenFromRequest(Http.Request request) {
         Optional<String> optionalToken = request.getHeaders().get("token");
@@ -40,13 +33,8 @@ public class ServiceUtils {
     public static User getUserFrom(Http.Request request) {
         return request.attrs().get(Attributes.USER_TYPED_KEY);
     }
-//    public static AuthenticatedUser getAuthUserFrom (Http.Headers request) {
-//        return request.attrs().get(Attributes.AUTH_USER_TYPED_KEY);
-//    }
-
 
     public static CompletableFuture<String> decodeToken(String token) {
-
         return CompletableFuture.supplyAsync(() -> {
                     byte[] decoded = Base64.getDecoder().decode(token.split("\\.")[1]);
                     String decodedString = new String(decoded);
@@ -58,35 +46,37 @@ public class ServiceUtils {
         );
     }
 
-    public static CompletableFuture<User> getUserFromId(String id) {
+    public static CompletableFuture<User> getUserFromId(IMongoDB mongoDB, String id) {
         return CompletableFuture.supplyAsync(() -> {
-            MongoCollection<User> collection = mongoDB
-                    .getMongoDatabase()
-                    .getCollection("user", User.class);
-            User user = collection.find(Filters.eq("_id", new ObjectId(id))).first();
+                    MongoCollection<User> collection = mongoDB
+                            .getMongoDatabase()
+                            .getCollection("user", User.class);
+                    User user = collection.find(Filters.eq("_id", new ObjectId(id))).first();
 
-            if (user == null) {
-                throw new CompletionException(new RequestException(Http.Status.NOT_FOUND, Json.toJson("User not found!")));
-            }
-            return user;
-        });
+                    if (user == null) {
+                        throw new CompletionException(new RequestException(Http.Status.NOT_FOUND, Json.toJson("User not found!")));
+                    }
+                    return user;
+                }
+        );
     }
 
-    public static CompletableFuture<User> verify(User user, String token) {
+    public static CompletableFuture<User> verify(User user, String token, Config config) {
         return CompletableFuture.supplyAsync(() -> {
-            String secret = config.getString("play.http.secret.key");
-            Algorithm algorithm = null;
-            try {
-                algorithm = Algorithm.HMAC256(secret);
-            } catch (UnsupportedEncodingException e) {
-                throw new CompletionException(new RequestException(Http.Status.BAD_REQUEST, e.getMessage()));
-            }
-            JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer(user.getId().toString())
-                    .build();
-            verifier.verify(token);
-            return user;
-        });
+                    String secret = config.getString("play.http.secret.key");
+                    Algorithm algorithm = null;
+                    try {
+                        algorithm = Algorithm.HMAC256(secret);
+                    } catch (UnsupportedEncodingException e) {
+                        throw new CompletionException(new RequestException(Http.Status.BAD_REQUEST, e.getMessage()));
+                    }
+                    JWTVerifier verifier = JWT.require(algorithm)
+                            .withIssuer(user.getId().toString())
+                            .build();
+                    verifier.verify(token);
+                    return user;
+                }
+        );
     }
 }
 
