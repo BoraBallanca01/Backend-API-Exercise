@@ -21,7 +21,7 @@ public class ContentController {
     ContentService service;
 
     public CompletableFuture<Result> read(Http.Request request, String id) {
-        return service.read( ServiceUtils.getUserFrom(request),id)
+        return service.read(ServiceUtils.getUserFrom(request), id)
                 .thenCompose(data -> serializationService.toJsonNode(data))
                 .thenApply(Results::ok)
                 .exceptionally(DatabaseUtils::throwableToResult);

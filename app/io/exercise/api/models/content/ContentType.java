@@ -30,9 +30,6 @@ import java.util.List;
 @BsonDiscriminator(key = "type", value = "NONE")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ContentType extends BaseModel {
-    @BsonId
-    @JsonSerialize(using = ObjectIdStringSerializer.class)
-    @JsonDeserialize(using = ObjectIdDeSerializer.class)
     Type type = Type.NONE;
     ObjectId dashboardId;
     List<String> realACL;

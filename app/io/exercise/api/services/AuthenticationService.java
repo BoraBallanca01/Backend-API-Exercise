@@ -20,6 +20,7 @@ import play.libs.Json;
 import play.mvc.Http;
 
 import java.util.Base64;
+import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
@@ -54,6 +55,7 @@ public class AuthenticationService {
                         Algorithm algorithm = Algorithm.HMAC256(secret);
                         return JWT.create()
                                 .withIssuer(user.getId().toString())
+                                .withExpiresAt(new Date(System.currentTimeMillis() + (30 * 60 * 1000)))
                                 .sign(algorithm);
                     } catch (JWTCreationException ex) {
                         ex.printStackTrace();

@@ -32,7 +32,7 @@ public class Dashboard extends BaseModel {
     @BsonProperty("children")
     List<Dashboard> children = new ArrayList<>();
 
-    List<ContentType> content=new ArrayList<>();
+    List<ContentType> content = new ArrayList<>();
 
 
 

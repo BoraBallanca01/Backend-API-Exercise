@@ -30,8 +30,8 @@ public class DashboardController extends Controller {
                 .thenApply(Results::ok)
                 .exceptionally(DatabaseUtils::throwableToResult);
     }
-    public CompletableFuture<Result> read(Http.Request request) {
-        return service.read(ServiceUtils.getUserFrom(request))
+    public CompletableFuture<Result> read(Http.Request request, int limit, int skip) {
+        return service.read(ServiceUtils.getUserFrom(request), limit,skip)
                 .thenCompose(data -> serializationService.toJsonNode(data))
                 .thenApply(Results::ok)
                 .exceptionally(DatabaseUtils::throwableToResult);
@@ -55,8 +55,8 @@ public class DashboardController extends Controller {
                 .exceptionally(DatabaseUtils::throwableToResult);
     }
 
-    public CompletableFuture<Result> hierarchy(){
-        return service.hierarchy()
+    public CompletableFuture<Result> hierarchy(Http.Request request){
+        return service.hierarchy(ServiceUtils.getUserFrom(request))
                 .thenCompose(data->serializationService.toJsonNode(data))
                 .thenApply(Results::ok)
                 .exceptionally(DatabaseUtils::throwableToResult);
