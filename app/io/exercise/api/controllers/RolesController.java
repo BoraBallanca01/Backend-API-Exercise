@@ -25,7 +25,8 @@ public class RolesController extends Controller {
     SerializationService serializationService;
     @Inject
     RolesService service;
-    @Validation(type= Roles.class)
+
+    @Validation(type = Roles.class)
     public CompletableFuture<Result> create(Http.Request request) {
         return serializationService.parseBodyOfType(request, Roles.class)
                 .thenCompose(data -> service.create(data))
@@ -33,13 +34,15 @@ public class RolesController extends Controller {
                 .thenApply(Results::ok)
                 .exceptionally(DatabaseUtils::throwableToResult);
     }
+
     public CompletableFuture<Result> read(Http.Request request) {
         return service.read()
                 .thenCompose(data -> serializationService.toJsonNode(data))
                 .thenApply(Results::ok)
                 .exceptionally(DatabaseUtils::throwableToResult);
     }
-    @Validation(type=Roles.class)
+
+    @Validation(type = Roles.class)
     public CompletableFuture<Result> update(Http.Request request, String id) {
         return serializationService.parseBodyOfType(request, Roles.class)
                 .thenCompose(data -> service.update(data, id))
@@ -48,7 +51,6 @@ public class RolesController extends Controller {
                 .exceptionally(DatabaseUtils::throwableToResult);
 
     }
-
 
     public CompletableFuture<Result> delete(Http.Request request, String id) {
         return serializationService.parseBodyOfType(request, Roles.class)

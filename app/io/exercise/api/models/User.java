@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 
 @Data
-//@EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)

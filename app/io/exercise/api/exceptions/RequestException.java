@@ -6,7 +6,6 @@ import lombok.ToString;
 @ToString
 public @Data class RequestException extends Exception {
     private static final long serialVersionUID = 1L;
-    // either String or List<String>
     private Object description;
     private int statusCode;
 

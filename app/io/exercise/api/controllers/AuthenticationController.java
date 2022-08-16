@@ -1,13 +1,10 @@
 package io.exercise.api.controllers;
 
 import com.google.inject.Inject;
-import io.exercise.api.actions.Authentication;
-import io.exercise.api.actions.Validation;
 import io.exercise.api.models.AuthenticatedUser;
 import io.exercise.api.services.AuthenticationService;
 import io.exercise.api.services.SerializationService;
 import io.exercise.api.utils.DatabaseUtils;
-import io.exercise.api.utils.ServiceUtils;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.mvc.Results;

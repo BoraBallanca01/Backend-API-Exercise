@@ -30,7 +30,11 @@ public class AuthenticationService {
 
     @Inject
     Config config;
-
+/**
+ * Method authenticates a user by generating a token!
+ * @param authUser the username and password of a user
+ * @request the token
+ * */
     public CompletableFuture<String> authenticate(AuthenticatedUser authUser) {
         return CompletableFuture.supplyAsync(() -> {
                     try {
@@ -39,16 +43,15 @@ public class AuthenticationService {
                                 .getCollection("user", User.class);
 
                         User user = collection
-                                .find(Filters
-                                        .eq("username", authUser.getUsername()))
+                                .find(Filters.eq("username", authUser.getUsername()))
                                 .first();
 
                         if (user == null) {
-                            throw new CompletionException(new RequestException(Http.Status.NOT_FOUND, Json.toJson("User not found!")));
+                            throw new CompletionException(new RequestException(Http.Status.NOT_FOUND, Json.toJson("Oops, not found!")));
                         }
 
                         if (!Hash.checkPassword(authUser.getPassword(), user.getPassword())) {
-                            throw new CompletionException(new RequestException(Http.Status.UNAUTHORIZED, Json.toJson("You are not authorized! Password Related")));
+                            throw new CompletionException(new RequestException(Http.Status.UNAUTHORIZED, Json.toJson("You are not authorized! Check your password!")));
                         }
 
                         String secret = config.getString("play.http.secret.key");
@@ -62,7 +65,7 @@ public class AuthenticationService {
                         throw new CompletionException(new RequestException(Http.Status.BAD_REQUEST, Json.toJson("Invalid Signing configuration / Couldn't convert Claims.")));
                     } catch (Exception ex) {
                         ex.printStackTrace();
-                        throw new CompletionException(new RequestException(Http.Status.UNAUTHORIZED, Json.toJson("You are not authorized! Catch Related")));
+                        throw new CompletionException(new RequestException(Http.Status.UNAUTHORIZED, Json.toJson("You are not authorized!")));
                     }
                 }
         );

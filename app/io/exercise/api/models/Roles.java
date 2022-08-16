@@ -12,8 +12,4 @@ public class Roles extends BaseModel  {
 
     String name;
 
-//    public Roles (String id, String name) {
-//        super.setId(new ObjectId(id));
-//        this.name = name;
-//    }
 }

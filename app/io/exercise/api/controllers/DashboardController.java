@@ -46,7 +46,6 @@ public class DashboardController extends Controller {
 
     }
 
-
     public CompletableFuture<Result> delete(Http.Request request, String id) {
         return serializationService.parseBodyOfType(request, Dashboard.class)
                 .thenCompose(data -> service.delete(data,ServiceUtils.getUserFrom(request), id))

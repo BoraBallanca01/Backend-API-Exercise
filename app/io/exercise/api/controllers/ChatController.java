@@ -60,8 +60,11 @@ public class ChatController extends Controller {
                             throw new CompletionException(new RequestException(Http.Status.NOT_FOUND, Json.toJson("Chat not found!")));
                         }
 
-                        String userId = user.getId().toString();
-                        List<String> roles = user.getRoles();
+                        String userId;
+                        userId = user.getId().toString();
+                        List<String> roles;
+                        roles = user.getRoles();
+
                         boolean read = false, write = false;
 
                         for (String id : roles) {

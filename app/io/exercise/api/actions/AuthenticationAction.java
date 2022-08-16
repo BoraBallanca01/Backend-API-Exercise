@@ -15,13 +15,12 @@ import io.exercise.api.models.User;
 import io.exercise.api.mongo.IMongoDB;
 import io.exercise.api.services.SerializationService;
 import io.exercise.api.utils.ServiceUtils;
-import org.bson.types.ObjectId;
+
 import play.libs.Json;
 import play.mvc.Action;
 import play.mvc.Http;
 import play.mvc.Result;
 
-import java.util.Base64;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.CompletionStage;
 
@@ -33,12 +32,15 @@ public class AuthenticationAction extends Action<Authentication> {
     @Inject
     Config config;
 
+
+    /**
+     * Method verifies a token for a given user!
+     * */
     @Override
     public CompletionStage<Result> call(Http.Request request) {
         try {
             String token = ServiceUtils.getTokenFromRequest(request);
-            User user = ServiceUtils
-                    .decodeToken(token)
+            User user = ServiceUtils.decodeToken(token)
                     .thenCompose(x -> ServiceUtils.getUserFromId(mongoDB, x))
                     .thenCompose(x -> ServiceUtils.verify(x, token, config))
                     .join();
@@ -50,7 +52,7 @@ public class AuthenticationAction extends Action<Authentication> {
             throw new CompletionException(new RequestException(Http.Status.BAD_REQUEST, Json.toJson("Invalid Signing configuration / Couldn't convert Claims.")));
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new CompletionException(new RequestException(Http.Status.UNAUTHORIZED, Json.toJson("You are not authorized! Catch Related")));
+            throw new CompletionException(new RequestException(Http.Status.UNAUTHORIZED, Json.toJson("You are not authorized!")));
         }
     }
 }
